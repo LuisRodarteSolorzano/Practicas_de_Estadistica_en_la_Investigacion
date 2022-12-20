@@ -42,3 +42,37 @@ Resuelva:
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
 
+# Práctica Rendimiento Automotriz
+
+## Descripción de Base de Datos
+Para la realización de esta actividad, es necesario consultar la Base de Datos Rendimiento.xlsx a la 
+cual puede acceder desde el aula virtual del curso. Puede apoyarse en el video tutorial Práctica 
+Rendimiento Automotriz, el cual ilustra el desarrollo de esta práctica.
+
+DESCRIPCION: Este conjunto de datos corresponde a una muestra que contiene 356 observaciones. 
+Las variables de la base de datos son las siguientes:
+- Columna 1: No. (número de identificación)
+- Columna 2: Marca
+- Columna 3: MAKE MODEL
+- Columna 4: CLASS
+- Columna 5: ENGINE SIZE (L)
+- Columna 6: CYLINDERS
+- Columna 7: TRANSMISSION
+- Columna 8: FUEL TYPE
+- Columna 9: CONSUMPTION CITY (L/100 KM)
+- Columna 10: CONSUMPTION HIGHWAY (L/100 KM)
+- Columna 11: CONSUMPTION COMBINED (L/100 KM)
+- Columna 12: $ PER YEAR
+- Columna 13: CO2 EMISSIONS (g/km)
+- Columna 14: CO2 RATING
+
+------------------------------------------------------------------------------------
+
+Resuelva: Basado en el vídeo de la práctica rendimiento, realice lo que se pide a continuación:
+1. Tabla de frecuencias de la variable “Class” para la marca “Toyota” y grafique en un diagrama de barras. Interprete.
+2. Tabla de frecuencias de la variable “Transmission” para la marca “Mazda” y grafique en un diagrama de barras. Interprete.
+3. Obtenga las estadísticas básicas (media y varianza) de la variable “CO2 EMISSIONS (g/km)” de la marca “Porsche”. Realice el histograma correspondiente. Interprete.
+4. Obtenga las estadísticas básicas (media y varianza) de la variable “CONSUMPTION COMBINED (L/100 KM)” de la marca “Dodge”. Realice el histograma correspondiente. Interprete.
+5. De toda la base de datos ¿Qué vehículo le parece el mejor? Justifique su respuesta.
+
+
