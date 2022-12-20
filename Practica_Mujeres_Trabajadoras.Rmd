@@ -1,0 +1,859 @@
+---
+title: "Práctica Mujeres Trabajadoras"
+author: "Luis Manuel Rodarte Solórzano"
+date: "9/14/2021"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## DESCRIPCIÓN:
+
+Este conjunto de datos se obtuvo de la Sección de Estudios de Ingresos Dinámicos de la Universidad de Michigan. El propósito de los datos en esta aplicación es estudiar los factores que influyen en las mujeres casadas a participar en la fuerza laboral. Esta muestra contiene 200 observaciones. Las variables de la base de datos y sus categorías son las siguientes:
+
+Columna 1: (AÑOA) - Variable que indica si la esposa trabaja fuera del hogar en el año en que se toma la muestra (1=sí, 0=no).
+
+Columna 2: (AÑOP) - Variable indicadora si es que la esposa trabajó fuera de su hogar en el año previo al muestreo (1=sí, 0=no).
+
+Columna 3: (INGESP) - Ingresos del esposo en miles de dólares.
+
+Columna 4: (EDAD) - Edad del respondiente en años.
+
+Columna 5: (EDUC) - Nivel de educación del respondiente en años.
+
+Columna 6: (RAZAN) - Variable indicadora para la raza negra (1=negra, 0=no-negra).
+
+Columna 7: (NIÑ1) - Variable indicadora si es que hay niños en el hogar menores de dos años (1=si, 0=no).
+
+Columna 8: (NIÑ2) - Variable indicadora si es que hay niños en el hogar entre 2 y 6 años (1=sí, 0=no).
+
+Resuelva:
+
+1.  ¿Qué proporción de mujeres no trabajaron ni al momento de la encuesta, ni el año anterior a la encuesta?
+
+2.  ¿Cómo se comportan los salarios del esposo, para mujeres que trabajan y para las que no trabajan?
+
+3.  ¿Qué podemos decir de la edad de las mujeres incluidas en la muestra?
+
+4.  ¿Qué sucede con la proporción de las mujeres no trabajadoras, de acuerdo al nivel educativo?
+
+5.  ¿Hay más mujeres trabajadoras con niños menores de dos años o mayores?
+
+6.  ¿Qué proporción de mujeres negras trabajaron durante los dos años referidos en la muestra? Y ¿qué proporción de mujeres no negras trabajaron durante el mismo período?
+
+7.  ¿Qué podemos decir acerca de las características de las mujeres que trabajan?
+
+------------------------------------------------------------------------
+
+## Paso 1. Se carga la base de datos
+
+```{r echo=TRUE}
+library(readxl)
+Práctica_Mujeres_Trabajadoras <- read_excel("Práctica_Mujeres_Trabajadoras.xlsx")
+head(Práctica_Mujeres_Trabajadoras)
+```
+
+------------------------------------------------------------------------
+
+## Paso 2. Se cargan los paquetes y librerías necesarias
+
+library(dplyr) library(tidyr) library(ggplot2)
+
+```{r include=FALSE}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+------------------------------------------------------------------------
+
+## Paso 3. Se edita la base o tabla de Datos
+
+```{r}
+datos<-data.frame(Práctica_Mujeres_Trabajadoras)
+datos$ANIOP<-factor(datos$ANIOP,
+                    levels = levels(factor(datos$ANIOP)),
+                    labels = c("no_labora","si_labora")) 
+datos$ANIOA<-factor(datos$ANIOA,
+                    levels = levels(factor(datos$ANIOA)),
+                    labels = c("no_labora","si_labora"))
+datos$RAZAN<-factor(datos$RAZAN,
+                    levels = levels(factor(datos$RAZAN)),
+                    labels = c("blanca","negra"))
+datos$NIN1<-factor(datos$NIN1,
+                   levels = levels(factor(datos$NIN1)),
+                   labels = c("no_hay","si_hay"))
+datos$NIN2<-factor(datos$NIN2,
+                   levels = levels(factor(datos$NIN2)),
+                   labels = c("no_hay","si_hay"))
+head(datos)
+```
+
+------------------------------------------------------------------------
+
+## Paso 4. Análisis y resultados
+
+## 1. ¿Qué proporción de mujeres no trabajaron ni al momento de la encuesta, ni el año anterior a la encuesta?
+
+```{r}
+# Tabla de frecuencias absolutas
+tabla_0<-table(select(datos,c(ANIOA,ANIOP)))   
+tabla_0                                        
+
+datos_0<-as.data.frame(tabla_0)
+datos_0
+
+# Gráfico de la tabla cruzada de frecuencias absolutas 
+ggplot(data=datos_0, aes(x=ANIOP, y=Freq,fill=ANIOA)) + 
+  geom_bar(stat="identity",position=position_dodge()) + geom_text(aes(label = Freq),                                                vjust=0,size = 3.5)+
+   labs(title = "Diagrama de barras de la tabla cruzada de frecuencias absolutas")+
+  scale_fill_manual(values=c("green", "purple"))
+```
+
+Como se puede observar en la tabla y gráfico anteriores, en términos de frecuencia absoluta se tiene que **50 mujeres no laboraron en ambos periodos**, 25 mujeres no laboraron en el año previo a la realización de la encuesta pero si en el año en que se realizó la encuesta, solo 15 mujeres si laboraron en el año previo a la realización de la encuesta pero no en el año de realización de la encuesta, mientras que 110 mujeres laboraron en ambos periodos.
+
+------------------------------------------------------------------------
+
+```{r}
+# Tabla de frecuencias relativas o proporciones
+tabla_0_prop<-prop.table(tabla_0)
+tabla_0_prop
+
+datos_0_prop<-as.data.frame(tabla_0_prop)   
+
+# Gráfico de la tabla cruzada de frecuencias relativas o proporciones 
+ggplot(data=datos_0_prop, aes(x=ANIOA, y=Freq, fill=ANIOP)) + 
+  geom_bar(stat="identity",
+           position=position_dodge2())+geom_text(aes(label=Freq),
+                                               vjust=0,size=3.5)+
+  ylab("Frecuencia relativa")+
+  labs(title = "Diagrama de barras de la tabla cruzada de frecuencias relativas")+
+  scale_fill_manual(values=c("green", "purple"))
+```
+
++---------------------------------------+------------------------------------------------+-----------+
+| **Año en que se realizó la encuesta** | **Año previo a la realización de la encuesta** |           |
++:=====================================:+:==============================================:+:=========:+
+|                                       | No laboró                                      | Si laboró |
++---------------------------------------+------------------------------------------------+-----------+
+| No labora                             | 0.250                                          | 0.075     |
++---------------------------------------+------------------------------------------------+-----------+
+| Si labora                             | 0.125                                          | 0.550     |
++---------------------------------------+------------------------------------------------+-----------+
+
+De acuerdo a la tabla y gráfico anteriores, en términos de frecuencia relativa o proporciones, se tiene que
+
+-   ***25% de las mujeres no laboraron en ambos periodos (no trabajaron ni al momento de la encuesta, ni el año anterior a la encuesta)***,
+
+-   12.5% de las mujeres no laboraron en el año previo a la realización de la encuesta pero si en el año en que se realizó la encuesta; es decir, pasaron de no laborar a laborar, y
+
+-   solo 7.5% de las mujeres si laboraron en el año previo a la realización de la encuesta pero no en el año de realización de la encuesta, es decir, 7.5% pasaron de laborar a no laborar.
+
+-   Por otro lado, el 55% de las mujeres laboraron en ambos periodos, mientras que el 25% no laboraron en ninguno de los periodos.
+
+------------------------------------------------------------------------
+
+## 2. ¿Cómo se comportan los salarios del esposo, para mujeres que trabajan y para las que no trabajan?
+
+```{r echo=TRUE}
+# Tabla de estadística descriptiva del salario del esposo por grupo de mujeres
+aggregate(INGESP~ANIOA,FUN=summary,data=datos)
+
+# Gráfica Box plot del salario del esposo por grupo de mujeres
+ggplot(data =datos , mapping = aes(x = ANIOA, y = INGESP)) +
+  labs(title = "Diagramas de caja del salario del esposo por grupo de mujeres")+
+  geom_boxplot()
+```
+
++-----------------------------------+----------------+-------+---------+------------+---------+----------------+
+| Año en que se realizó la encuesta | Ingreso mínimo | Q1    | Mediana | Media      | Q3      | Ingreso máximo |
++:=================================:+:==============:+:=====:+:=======:+:==========:+:=======:+:==============:+
+| No labora                         | 0              | 5,795 | 7,804   | 10,033.969 | 11,917  | 54,281         |
++-----------------------------------+----------------+-------+---------+------------+---------+----------------+
+| Si labora                         | 0              | 7,788 | 7,786   | 8,244.844  | 1,151.5 | 27,938         |
++-----------------------------------+----------------+-------+---------+------------+---------+----------------+
+
+Como se puede observar en la tabla de estadística descriptiva y en los diagramas de cajas anteriores, **respecto al grupo de mujeres que no laboran**,
+
+1.  El ingreso mínimo de los esposos es de 0 (se desconoce la razón), mientras que el ingreso máximo es de 54,281 dólares.
+
+2.  Por otro lado, en un 25% de las mujeres que no laboran, sus esposos tuvieron un ingreso menor o igual a 5,795 dólares, mientras que en 50% de las mujeres de este mismo grupo, sus esposos tuvieron un ingreso menor o igual a 7,804 dólares, y
+
+3.  en un 75% de las mujeres que no laboran, sus esposos tuvieron un ingreso menor o igual a 11,917 dólares.
+
+4.  Por otro lado, en este mismo grupo, de mujeres que no laboran, el ingreso promedio de los esposos es de aproximadamente 10,034 dólares.
+
+Respecto al **grupo de mujeres que si laboran**, se observa que
+
+1.  El ingreso mínimo de los esposos también es de 0, mientras que el ingreso máximo es de 27,938 dólares.
+
+2.  Por otro lado, en un 25% de las mujeres que si laboran sus esposos tuvieron un ingreso menor o igual a 5,788 dólares.
+
+3.  En 50% de las mujeres de este mismo grupo, sus esposos tuvieron un ingreso menor o igual a 7,786 dólares, y
+
+4.  en 75% de las mujeres que si laboran, sus esposos tuvieron un ingreso menor o igual a 10,151.5 dólares.
+
+5.  Asi mismo, cabe mencionar que en este grupo (mujeres que si laboran) el ingreso promedio de los esposos es de aproximadamente 8,245 dólares.
+
+**Por otro lado, cabe mencionar que los ingresos mínimos de los esposos en ambos grupos son iguales y los valores del cuartil 1 y mediana son muy similares, por lo que parece ser que no hay indicios de que los ingresos medios en ambos grupos sean diferentes, sin embargo, pareciera ser que los ingresos de los esposos de las mujeres que no laboran si tienen una mayor variación o dispersión, quizás habría que confirmarlo con una prueba de hipótesis.**
+
+------------------------------------------------------------------------
+
+## 3. ¿Qué podemos decir de la edad de las mujeres incluidas en la muestra?
+
+```{r}
+# Tabla de estadística descriptiva
+summary(select(datos,EDAD))
+sd(datos$EDAD, na.rm = TRUE)
+
+# Gráfica Box plot
+ggplot(data = datos, mapping = aes(x ="",y=EDAD)) +xlab("")+
+  labs(title = "Diagrama de caja de la variable Edad")+
+  geom_boxplot()
+
+normalidad<-ggplot(data = datos, aes(EDAD))+xlab("")+ylab("Conteos")
+normalidad+geom_histogram(color="darkblue",fill="lightblue",bins =5)
+```
+
+|     Estadístico     |   Edad   |
+|:-------------------:|:--------:|
+|       Mínimo        |    21    |
+|         Q1          |    30    |
+|       Mediana       |    35    |
+|        Media        |  35.06   |
+|         Q3          |    41    |
+|       Máximo        |    46    |
+| Desviación estándar | 7.018337 |
+
+En la tabla de estadística descriptiva y en el diagrama de caja anteriores se observa que en la muestra
+
+1.  la mujer más joven tiene 21 años mientras que la edad máxima es de 46 años, es decir, las mujeres de mayor edad son las que tienen (o tenían al momento de la encuesta) 46 años.
+
+2.  El 25% de las mujeres se encontró en una edad menor o igual a los 30 años, el 50% de las mujeres se encontró en una edad menor o igual a los 35 años, y el 75% de las mujeres se encontró en una edad menor o igual a los 41 años.
+
+3.  **Así mismo cabe mencionar que el promedio de edad de las mujeres de la muestra es de 35 años**.
+
+------------------------------------------------------------------------
+
+```{r}
+# Tabla de estadística descriptiva de la edad por grupo (si laboran o no)
+aggregate(EDAD~ANIOA,FUN=summary,data=datos)
+# Gráfica de la edad por cada grupo
+ggplot(data = datos, mapping = aes(ANIOA,y=EDAD))+
+  labs(title = "Diagramas de caja de la variable Edad")+
+  geom_boxplot()
+
+# Distribución de la variable Edad por grupo (si labora o no)
+ggplot(datos)+ 
+  geom_histogram(bins = 10, aes( EDAD)) + 
+  facet_grid(ANIOA~., scales = 'free') +
+  xlab("Edad") + 
+  ylab("Frecuencia") + 
+  ggtitle("Distribución de la variable edad") +
+  theme_minimal()
+```
+
+| Año en que se realizó la encuesta | Edad mínima | Q1  | Mediana | Media | Q3  | Edad máxima |
+|:---------------------------------:|:-----------:|:---:|:-------:|:-----:|:---:|:-----------:|
+|             No labora             |     23      | 27  |   31    | 32.9  | 39  |     46      |
+|             Si labora             |     21      | 31  |   37    | 36.1  | 42  |     46      |
+
+De acuerdo a la tabla de estadística descriptiva y a los diagramas anteriores se observa que ***para el grupo de mujeres que no laboran (no se encontraban laborando en el año en que se realizó la encuesta),***
+
+1.  la edad mínima es de 23 años y la edad máxima de 46 años.
+
+2.  El 25% de las mujeres en este grupo tiene una edad menor o igual a los 27 años, el 50% una edad menor o igual a los 31 años, y el 75% una edad menor o igual a los 39 años.
+
+3.  El **promedio de la edad de las mujeres que no laboran es de aproximadamente 33 años.**
+
+Respecto al ***grupo de mujeres que si laboran,***
+
+1.  la edad mínima es de 21 años, es decir, la mujer más joven tiene 21 años, mientras que la edad máxima es también de 46 años.
+
+2.  El 25% de las mujeres en este grupo tiene una edad menor o igual a los 31 años, el 50% una edad menor o igual a los 37 años, y el 75% una edad menor o igual a los 42 años.
+
+3.  **El promedio de la edad de las mujeres que si laboran es de 36 años.**
+
+**Pareciera que la edad en el grupo de mujeres que si laboran en el año en que se realizó la encuesta es ligeramente mayor que la edad en el grupo de mujeres que no laboran. Esta situación o característica se distingue a partir del valor del primer cuartil en ambos grupos. Sin embargo, no hay indicios de que ambos grupos (mujeres que laboran y mujeres que no laboran) sean significativamente diferentes respecto a la edad. Para dar una mejor respuesta a esta cuestión quizás sea necesario realizar una prueba de hipótesis**.
+
+------------------------------------------------------------------------
+
+A continuación se analiza la variable edad de las mujeres respecto a si laboraban o no en el año previo a la realización de la encuesta.
+
+```{r}
+# Tabla de estadística descriptiva de la edad por grupo (si laboraba o no)
+aggregate(EDAD~ANIOP,FUN=summary,data=datos)
+# Gráfica de la edad por cada grupo
+ggplot(data = datos, mapping = aes(ANIOP,y=EDAD))+
+  labs(title = "Diagramas de caja de la variable Edad por cada grupo")+
+  geom_boxplot()
+
+# Distribución de la variable Edad por grupo (si laboraba o no)
+ggplot(datos)+ 
+  geom_histogram(bins = 10, aes( EDAD)) + 
+  facet_grid(ANIOP~., scales = 'free') +
+  xlab("Edad") + 
+  ylab("Frecuencia") + 
+  ggtitle("Distribución de la variable edad") +
+  theme_minimal()
+```
+
++-------------------------------------------------------+-------------+------+---------+-------+----+-------------+
+| Año anterior o previo a la realización de la encuesta | Edad mínima | Q1   | Mediana | Media | Q3 | Edad máxima |
++:=====================================================:+:===========:+:====:+:=======:+:=====:+:==:+:===========:+
+| No laboró                                             | 23          | 28.5 | 34      | 34.8  | 42 | 46          |
++-------------------------------------------------------+-------------+------+---------+-------+----+-------------+
+| Si laboró                                             | 21          | 30   | 35      | 35.2  | 40 | 46          |
++-------------------------------------------------------+-------------+------+---------+-------+----+-------------+
+
+De acuerdo a la tabla de estadística descriptiva y a los diagramas anteriores se observa que ***para el grupo de mujeres que no laboraban en el año previo o anterior a la realización de la encuesta***
+
+1.  la edad mínima es de 23 años y la edad máxima de 46 años.
+
+2.  Aroximadamente el 25% de las mujeres en este grupo tiene una edad menor o igual a los 28 años, el 50% una edad menor o igual a los 34 años, y el 75% una edad menor o igual a los 42 años.
+
+3.  El **promedio de la edad de las mujeres que no laboraban en el año previo o anterior a la realización de la encuesta es de aproximadamente 35 años.**
+
+Respecto al ***grupo de mujeres que si laboraban en el año previo o anterior a la realización de la encuesta***
+
+1.  la edad mínima es de 21 años, es decir, la mujer más joven tiene 21 años, mientras que la edad máxima es también de 46 años.
+
+2.  El 25% de las mujeres en este grupo tiene una edad menor o igual a los 30 años, el 50% una edad menor o igual a los 35 años, y el 75% una edad menor o igual a los 40 años.
+
+3.  El **promedio de la edad de las mujeres que si laboraban en el año previo o anterior a la realización de la encuesta es también de aproximadamente 35 años.**
+
+A reserva de realizar una prueba de hipótesis no parece haber evidencia de que las edades en estos dos grupos sean significativamente diferentes.
+
+------------------------------------------------------------------------
+
+## 4. ¿Qué sucede con la proporción de las mujeres no trabajadoras, de acuerdo al nivel educativo?
+
+```{r include=FALSE}
+aggregate(EDUC~ANIOA,FUN=summary,data=datos)  # no mostrar código porque la variable EDUC se considera más bien categórica
+```
+
+En primer lugar veamos la distribución del nivel de educación en años en la muestra en general.
+
+```{r}
+# Convertir a factor la variable EDUC
+table(datos$EDUC)
+datos$EDUC<-factor(datos$EDUC)
+```
+
+Como se puede observar en la tabla anterior, en la muestra la mayor parte de las mujeres (153 mujeres) poseen 12 años de educación, mientras que solo 6 poseen 18 años de instrucción escolar.
+
+------------------------------------------------------------------------
+
+```{r}
+# tablas de proporciones 
+
+# Varible ANIOA
+ANIOA_d <- prop.table(table(select(datos,ANIOA)))
+ANIOA_d
+dato_ANIOA <-as.data.frame(ANIOA_d)
+dato_ANIOA
+dato_ANIOA<- rename(dato_ANIOA,ANIOA=Var1)
+dato_ANIOA
+
+# Diagrama de barras de frecuencias relativas
+ggplot(data = dato_ANIOA, aes(x=ANIOA, y=Freq))+
+  geom_bar(stat = "identity") + geom_text(aes(label= Freq), 
+                                          vjust = -0.3, 
+                                          size=3.5) + ylab("Frecuencia relativa")+
+  labs(title = "Diagrama de barras de frecuencias relativas (no labora/si labora)")+
+  scale_fill_manual(values = c("darkgreen","purple"))
+
+# Gráfico de pastel
+ggplot(data = dato_ANIOA, aes(x="", y=Freq, fill=ANIOA))+
+  geom_bar(stat = "identity", color="white") + 
+  geom_text(aes(label= Freq), 
+            position= position_stack(vjust = 0.5), 
+            color="white", size=5)+
+  coord_polar(theta = "y")+
+  scale_fill_manual(values = c("blue", "steelblue"))+
+  theme_void()+
+  labs(title = "Gráfico de pastel")
+```
+
+| Año en que se realizó la encuesta | Frecuencia relativa o proporción |
+|:---------------------------------:|:--------------------------------:|
+|             No labora             |              0.325               |
+|             Si labora             |              0.675               |
+
+En la tabla y gráficos anteriores se observa que **el 67.5% de las mujeres de la muestra, si laboraban en el año en que se realizó la encuesta, mientras que solo el 32.5% no laboraban.** Es decir, independientemente de los años de educación, aproximadamente dos de cada tres mujeres si se encontraban laborando en el año en que se realizó la encuesta.
+
+------------------------------------------------------------------------
+
+```{r}
+# Variable EDUC
+educ_d <- prop.table(table(select(datos,EDUC)))
+educ_d
+
+dato_educ<- as.data.frame(educ_d) 
+
+dato_educ<- rename(dato_educ,EDUC=Var1)
+
+# Gráfica de frecuencias relativas de la variable EDUC
+ggplot(data = dato_educ, aes(x=EDUC, y=Freq))+
+  geom_bar(stat = "identity") + geom_text(aes(label= Freq), 
+                                          vjust = -0.3, 
+                                          size=3.5) + ylab("Frecuencia relativa")+
+  labs(title = "Gráfico de frecuencias relativas de la variable EDUC")+
+  scale_fill_manual(values = c("blue","steelblue","orange","gray","green"))
+
+
+# Gráfica de pastel
+ggplot(data = dato_educ, aes(x="", y=Freq, fill=EDUC))+
+  geom_bar(stat = "identity", color="white") + 
+  geom_text(aes(label= Freq), 
+            position= position_stack(vjust = 0.5), 
+            color="white", size=5)+
+  coord_polar(theta = "y")+
+  scale_fill_manual(values = c("blue", "steelblue","orange","gray","green"))+
+  theme_void()+
+  labs(title = "Gráfica de pastel")
+```
+
+| Nivel de educación en años | Frecuencia relativa o proporción |
+|:--------------------------:|:--------------------------------:|
+|             7              |              0.030               |
+|             10             |              0.120               |
+|             12             |              0.765               |
+|             16             |              0.055               |
+|             18             |              0.030               |
+
+Como se puede observar en la tabla de frecuencias relativas o proporciones y en los gráficos anteriores, **el 76.5% de las mujeres tuvo un nivel de estudios de 12 años**, es decir, como si había dicho antes, **la mayoría de las mujeres tiene un grado de estudios de 12 años**, posteriormente le siguen las mujeres que tienen un nivel de estudios de 10 años con un 12% de los casos, y después las mujeres que tienen un nivel de estudios de 16 años con 5.5% de los casos; y finalmente solo 3% de las mujeres tuvieron un nivel de estudios de 18 años, y el 3% restante tuvo un grado de estudios de solo 7 años.
+
+------------------------------------------------------------------------
+
+```{r}
+# tabla de frecuencia cruzada EDUC y ANIOA 
+tabla_1<-table(select(datos,EDUC,ANIOA))
+tabla_1
+tabla_1_prop<-prop.table(tabla_1)
+tabla_1_prop
+
+
+#conversión de tabla a data frame
+
+datos_1<-as.data.frame(tabla_1)
+datos_1
+datos_1_prop<-as.data.frame(tabla_1_prop)
+
+# Gráfico de frecuencias relativas de la variable EDUC por grupo
+ggplot(data = datos_1_prop, aes(x=EDUC, y=Freq, fill=ANIOA))+
+  geom_bar(stat = "identity", position= position_dodge())+ 
+  geom_text(aes(label= Freq), vjust = 0, size=3.5)+
+  ylab("frecuencia relativa")+
+  labs(title = "Gráfico de frecuencias relativas de la variable EDUC por grupo")+
+  scale_fill_manual(values = c("green", "purple"))  
+```
+
+| Nivel de educación en años | Año en que se realizó la encuesta |           |
+|:--------------------------:|:---------------------------------:|:---------:|
+|                            |             No labora             | Si labora |
+|             7              |               0.005               |   0.025   |
+|             10             |               0.035               |   0.085   |
+|             12             |               0.275               |   0.490   |
+|             16             |               0.010               |   0.045   |
+|             18             |                 0                 |   0.030   |
+
+-   **El 67.5% de las mujeres de la muestra, si laboraban en el año en que se realizó la encuesta, mientras que solo el 32.5% no laboraban.** Es decir, independientemente de los años de educación, aproximadamente dos de cada tres mujeres si se encontraban laborando en el año en que se realizó la encuesta.
+
+-   **De las tablas de frecuencias relativas y gráficos anteriores, se concluye que el 76.5% de las mujeres cuenta con un nivel de estudios de 12 años, y especificamente el 49% de estas mujeres si labora, mientras que el 27.5% no labora.**
+
+-   **El 12% de las mujeres tiene un nivel de estudios de 10 años; y especificamente el 8.5% de estas mujeres si labora, mientras que el 3.5% no labora.**
+
+-   **Por otro lado un 3% de las mujeres tiene un nivel de estudios de solo 7 años; y especificamente el 2.5% si labora, mientras que el 0.5% no labora.**
+
+-   **Finalmente, del 3% de las mujeres que tienen un nivel de estudios de 18 años, todas laboran.**
+
+------------------------------------------------------------------------
+
+```{r include=FALSE}
+# Grafico de la frecuencias de la variable ANIOA
+ggplot(data=datos_1, aes(x=ANIOA, y=Freq)) + 
+  geom_bar(stat="identity") +
+  labs(title = "Gráfico de frecuencias de la variable ANIOA")+
+  scale_fill_manual(values=c("darkgreen", "purple","black"))
+
+# Gráfica de frecuencias relativas de la variable ANIOA
+ggplot(data=datos_1_prop, aes(x=ANIOA, y=Freq)) + 
+  geom_bar(stat="identity") +ylab("Frecuencia relativa")+
+  labs(title = "Gráfico de frecuencias relativas de la variable ANIOA")+
+  scale_fill_manual(values=c("darkgreen", "purple","black"))
+  
+  
+# Gráfica de frecuencias relativas de la variable EDUC
+ggplot(data=datos_1_prop, aes(x=EDUC, y=Freq)) + 
+  geom_bar(stat="identity") +ylab("Frecuencia relativa")+
+  labs(title = "Gráfico de frecuencias relativas de la variable EDUC")+
+  scale_fill_manual(values=c("darkgreen", "purple","black"))
+
+ggplot(data=datos_1, aes(x=EDUC, y=Freq,fill=ANIOA)) + 
+  geom_bar(stat="identity",position = position_stack()) +
+  labs(title = "Gráfico de frecuencias de la variable EDUC")+
+  scale_fill_manual(values=c("darkgreen", "purple","black"))
+
+ggplot(data=datos_1_prop, aes(x=EDUC, y=Freq,fill=ANIOA)) + 
+  geom_bar(stat="identity",position = position_stack()) +ylab("frecuencia relativa")+
+  labs(title = "Gráfico de frecuencias relativas de la variable EDUC")+
+  scale_fill_manual(values=c("darkgreen", "purple"))
+```
+
+## 5. ¿Hay más mujeres trabajadoras con niños menores de dos años o mayores?
+
+```{r}
+# Tabla cruazada ANIOA y NIN1
+tabla_02<-table(select(datos,ANIOA,NIN1))  
+datos_02<-as.data.frame(tabla_02)
+table_02_prop<-prop.table(tabla_02)
+table_02_prop
+datos_02_prop<-as.data.frame(table_02_prop)
+
+
+# Gráfica de la tabla cruazada ANIOA y NIN1
+ggplot(data=datos_02_prop, aes(x=ANIOA, y=Freq,fill=NIN1)) +
+  geom_bar(stat="identity",position = position_dodge()) + 
+  ylab("frecuencia relativa") + geom_text(aes(label= Freq), vjust = -0.4, size=3.5)+
+    labs(title = "Gráfico de barras de las variables ANIOA y NIN1")+
+  scale_fill_manual(values=c("green", "purple"))
+
+```
+
+| Año en que se realizó la encuesta | Tiene niños menores de 2 años |        |
+|:---------------------------------:|:-----------------------------:|:------:|
+|                                   |            No hay             | Si hay |
+|             No labora             |             0.285             | 0.040  |
+|             Si labora             |             0.665             | 0.010  |
+
+Como se puede apreciar en la tabla y gráfico anteriores:
+
+-   **El 66.5% de las mujeres de la muestra laboran y no tienen hijos en casa menores de 2 años de edad.**
+
+-   El 28.5% de las mujeres de la muestra no laboran y no tiene hijos menores de 2 años de edad.
+
+-   Por otro lado, **independientemente de si la mujer labora o no, resultó poco el número de mujeres que si cuentan con niños en casa menores a dos años de edad, siendo específicos solo el 5% de las mujeres de la encuesta.**
+
+------------------------------------------------------------------------
+
+```{r}
+# Tabla cruzada ANIOA y NIN2
+tabla_002<-table(select(datos,ANIOA,NIN2))  
+tabla_002_prop<-prop.table(tabla_002)
+tabla_002_prop
+
+datos_002_prop<-as.data.frame(tabla_002_prop)
+
+# Gráfica de la tabla cruzada ANIOA y NIN2
+ggplot(data=datos_002_prop, 
+       aes(x=ANIOA, y=Freq,fill=NIN2)) +
+  geom_bar(stat="identity",
+           position = position_dodge()) + 
+  geom_text(aes(label= Freq), 
+            vjust = 0, size=3.5)+
+  ylab("frecuencia relativa")+
+    labs(title = "Gráfico de barras de las variables ANIOA y NIN2")+
+  scale_fill_manual(values=c("green", "purple"))
+```
+
+| Año en que se realizó la encuesta | Tiene niños de entre 2 y 6 años de edad |        |
+|:---------------------------------:|:---------------------------------------:|:------:|
+|                                   |                 No hay                  | Si hay |
+|             No labora             |                  0.175                  | 0.150  |
+|             Si labora             |                  0.515                  | 0.160  |
+
+Como se puede apreciar en la tabla y gráfico anteriores:
+
+-   **La mayoría de las mujeres que laboran no tienen hijos en casa de entre 2 y 6 años de edad, siendo específicos un 51.5% de las mujeres en esta encuesta.**
+
+-   El 17.5% de las mujeres que participaron en la encuesta no labora y no tiene hijos entre 2 y 6 años de edad.
+
+-   Por otro lado **independientemente de si la mujer labora o no, resulta que el número de mujeres que si cuentan con niños en casa de entre 2 y 6 años de edad es del 31%, siendo las proporciones muy similares tanto para las mujeres que no laboran como para las que si laboran (15% y 16% respectivamente, de la muestra).**
+
+-   **Solo el 16% de las mujeres en la muestra, si laboran y tienen hijos de entre 2 y 6 años de edad**; mientras que hay un 15% que no laboran y si tienen hijos en ese mismo rango de edad.
+
+-   **Pareciera que no hay más mujeres trabajadoras, que mujeres no trabajadoras, con niños menores de dos años o mayores.**
+
+------------------------------------------------------------------------
+
+```{r}
+# Tabla cruzada ANIOA, NIN1 y NIN2
+tabla_0002<-table(select(datos,ANIOA,NIN1,NIN2))  
+datos_0002<-as.data.frame(tabla_0002)
+table_0002_prop<-prop.table(tabla_0002)
+table_0002_prop
+datos_0002_prop<-as.data.frame(table_0002_prop)
+
+# Gráfica de la tabla cruazada ANIOA, NIN1 y NIN2
+ggplot(data=datos_0002_prop, 
+       aes(x=ANIOA, y=Freq,fill=NIN2)) +
+  facet_grid(NIN1~.)+
+  geom_bar(stat="identity",
+           position = position_dodge()) + 
+  geom_text(aes(label= Freq), 
+            vjust = 0, size=3.5)+
+  ylab("frecuencia relativa")+
+  labs(title = "Gráfico de barras de la tabla cruazada ANIOA, NIN1 y NIN2")+
+  scale_fill_manual(values=c("green", "purple"))
+```
+
+|      No cuenta con hijos de entre 2 y 6 años |
+|---------------------------------------------:|
+| ¿Cuenta con hijos menores de 2 años de edad? |
+
+| Año en el que se realizó la encuesta | No hay | Si hay |
+|:------------------------------------:|:------:|:------:|
+|              No labora               | 0.135  | 0.040  |
+|              Si labora               | 0.505  | 0.010  |
+
+------------------------------------------------------------------------
+
+|      Si cuenta con hijos de entre 2 y 6 años |
+|---------------------------------------------:|
+| ¿Cuenta con hijos menores de 2 años de edad? |
+
+| Año en el que se realizó la encuesta | No hay | Si hay |
+|:------------------------------------:|:------:|:------:|
+|              No labora               | 0.150  | 0.000  |
+|              Si labora               | 0.160  | 0.000  |
+
+Como se puede observar en las tablas y gráfico anteriores:
+
+-   **El 50.5% de las mujeres que participaron en la encuesta si laboran y no cuentan con hijos de entre 0 y 6 años de edad**.
+
+-   El 15% de las mujeres no laboran y solo tienen hijos de entre los 2 y los 6 años de edad.
+
+-   El 16% de las mujeres si laboran y solo cuentan con hijos de entre 2 y 6 años de edad.
+
+-   El 13.5% no laboran y no tiene hijos entre 0 y 6 años de edad.
+
+-   Solo el 5% de las mujeres, independientemente de si laboran o no, solo tiene hijos menores de 2 años de edad.
+
+------------------------------------------------------------------------
+
+## 6. ¿Qué proporción de mujeres negras trabajaron durante los dos años referidos en la muestra? Y ¿qué proporción de mujeres no negras trabajaron durante el mismo período?
+
+```{r}
+tabla_3<-table(select(datos,c(ANIOP,ANIOA,RAZAN)))
+prop.table(tabla_3)
+datos_3<-as.data.frame(tabla_3)
+datos_3_prop<-as.data.frame(prop.table(tabla_3))
+
+ggplot(data=datos_3_prop, aes(x=ANIOP, y=Freq,fill=ANIOA)) +
+  facet_grid(RAZAN~.) +
+  geom_bar(stat="identity",position = position_dodge()) + geom_text(aes(label= Freq),                                                         vjust = 0, size=3.5)+
+  ylab("frecuencia relativa")+
+  labs(title = "Gráfico de barras de las variables ANIOAP, ANIOA y RAZAN")+
+  scale_fill_manual(values=c("green", "purple"))
+```
+
+De las tablas y gráficos anteriores se desprende que:
+
+-   La proporción de mujeres de raza negra y que laboraron en el periodo previo al estudio fue de 13%.
+
+-   La proporción de mujeres de raza negra que laboraron en el año previo a la encuesta y en el año en que se realizó la encuesta fue de 11.5%.
+
+-   ***Es decir, el 11.5% de las mujeres que participaron en la encuestra, son de raza negra y trabajaron durante los dos años referidos (año previo a la encuesta y año en que se realizó la encuesta).***
+
+-   La proporción de mujeres de raza blanca que laboraron en el año previo a la encuesta fue de 49.5%.
+
+-   La proporción de mujeres de raza blanca que laboraron en el año previo a la encuesta y en el año en que se realizó la encuesta fue de 43.5%
+
+-   ***Es decir, el 43.5% de las mujeres que participaron en la encuestra, son de raza blanca y trabajaron durante los dos años referidos (año previo a la encuesta y año en que se realizó la encuesta).***
+
+------------------------------------------------------------------------
+
+```{r eval=FALSE, include=FALSE}
+# Lo mismo que arriba pero separado
+ggplot(data=filter(datos_3_prop,RAZAN=="negra"), 
+       aes(x=ANIOP, y=Freq,fill=ANIOA)) +
+  geom_bar(stat="identity",
+           position = position_dodge()) + 
+  geom_text(aes(label= Freq), 
+            vjust = -0.3, size=3.5)+
+  ylab("frecuencia relativa")+
+  scale_fill_manual(values=c("green", "purple"))
+
+
+ggplot(data=filter(datos_3_prop,RAZAN=="blanca"), 
+       aes(x=ANIOP, y=Freq,fill=ANIOA)) +
+  geom_bar(stat="identity",
+           position = position_dodge()) + geom_text(aes(label= Freq), vjust = 0, size=3.5)+
+  ylab("frecuencia relativa")+
+  scale_fill_manual(values=c("green", "purple"))
+```
+
+```{r}
+# tablas de proporciones para las mujeres de raza negra 
+
+# Varible RAZAN
+RAZAN_d <- prop.table(table(select(datos,RAZAN)))
+RAZAN_d
+dato_RAZAN <-as.data.frame(RAZAN_d)
+dato_RAZAN
+dato_RAZAN<- rename(dato_RAZAN,RAZAN=Var1)
+dato_RAZAN
+
+# Diagrama de barras de frecuencias relativas
+ggplot(data = dato_RAZAN, aes(x=RAZAN, y=Freq))+
+  geom_bar(stat = "identity") + geom_text(aes(label= Freq), 
+                                          vjust = -0.3, 
+                                          size=3.5) + ylab("Frecuencia relativa")+
+  labs(title = "Diagrama de barras de frecuencias relativas (blanca/negra)")+
+  scale_fill_manual(values = c("green","purple"))
+```
+
+|  Raza  | Frecuencia relativa o proporción |
+|:------:|:--------------------------------:|
+| Blanca |              0.825               |
+| Negra  |              0.175               |
+
+Por otro lado, como se puede apreciar en las tablas y gráfico anteriores:
+
+-   **El 82.5% de las mujeres incluidas en la muestra son de raza blanca, mientras que el 17.5% son de raza negra.**
+
+------------------------------------------------------------------------
+
+```{r}
+NEGRA <- datos[datos$RAZAN=="negra",]
+table(NEGRA$ANIOA)
+table(NEGRA$ANIOP)
+
+# Tabla de frecuencias absolutas
+tabla_N<-table(select(NEGRA,c(ANIOA,ANIOP)))   
+tabla_N                                        
+
+datos_N<-as.data.frame(tabla_N)
+datos_N
+
+# Gráfico de la tabla cruzada de frecuencias absolutas 
+ggplot(data=datos_N, aes(x=ANIOP, y=Freq,fill=ANIOA)) + 
+  geom_bar(stat="identity",position=position_dodge()) + geom_text(aes(label = Freq),                                                vjust=0,size = 3.5)+
+   labs(title = "Diagrama de barras de la tabla cruzada de frecuencias absolutas")+
+  scale_fill_manual(values=c("green", "purple"))
+
+```
+
+```{r echo=TRUE}
+# Tabla de frecuencias relativas o proporciones
+tabla_N_prop<-prop.table(tabla_N)
+tabla_N_prop 
+
+datos_N_prop<-as.data.frame(tabla_N_prop)   
+
+# Gráfico de la tabla cruzada de frecuencias relativas o proporciones 
+ggplot(data=datos_N_prop, aes(x=ANIOA, y=Freq, fill=ANIOP)) + 
+  geom_bar(stat="identity",
+           position=position_dodge2())+geom_text(aes(label=Freq),
+                                               vjust=0,size=3.5)+
+  ylab("Frecuencia relativa")+
+  labs(title = "Diagrama de barras de la tabla cruzada de frecuencias relativas")+
+  scale_fill_manual(values=c("green", "purple"))
+```
+
++-----------------------------------+-------------------------------------------------------+-----------+
+| Año en que se realizó la encuesta | Año anterior o previo a la realización de la encuesta |           |
++:=================================:+:=====================================================:+:=========:+
+|                                   | No laboró                                             | Si laboró |
++-----------------------------------+-------------------------------------------------------+-----------+
+| No labora                         | 0.1429                                                | 0.0857    |
++-----------------------------------+-------------------------------------------------------+-----------+
+| Si labora                         | 0.1143                                                | 0.6571    |
++-----------------------------------+-------------------------------------------------------+-----------+
+
+Como se puede observar en las tablas y gráficos anteriores:
+
+-   **El 65.7% de las mujeres de raza negra que participaron en la encuesta, si laboraron en ambos periodos.**
+
+-   El 14.29% de las mujeres de raza negra no laboró en ninguno de los periodos.
+
+-   El 11.43% de estas mujeres (de raza negra) si laboró en el año en el que se realizó la encuesta pero no en el año previo o anterior.
+
+-   El 8.57% no laboró en el año en que se realizó la encuesta pero si en el año anterior.
+
+------------------------------------------------------------------------
+
+```{r}
+BLANCA <- datos[datos$RAZAN=="blanca",]
+table(BLANCA$ANIOA)
+table(BLANCA$ANIOP)
+
+# Tabla de frecuencias absolutas
+tabla_B<-table(select(BLANCA,c(ANIOA,ANIOP)))   
+tabla_B                                        
+
+datos_B<-as.data.frame(tabla_B)
+datos_B
+
+# Gráfico de la tabla cruzada de frecuencias absolutas 
+ggplot(data=datos_B, aes(x=ANIOP, y=Freq,fill=ANIOA)) + 
+  geom_bar(stat="identity",position=position_dodge()) + geom_text(aes(label = Freq),                                                vjust=0,size = 3.5)+
+   labs(title = "Diagrama de barras de la tabla cruzada de frecuencias absolutas")+
+  scale_fill_manual(values=c("green", "purple"))
+
+```
+
+```{r echo=TRUE}
+# Tabla de frecuencias relativas o proporciones
+tabla_B_prop<-prop.table(tabla_B)
+tabla_B_prop 
+
+datos_B_prop<-as.data.frame(tabla_B_prop)   
+
+# Gráfico de la tabla cruzada de frecuencias relativas o proporciones 
+ggplot(data=datos_B_prop, aes(x=ANIOA, y=Freq, fill=ANIOP)) + 
+  geom_bar(stat="identity",
+           position=position_dodge2())+geom_text(aes(label=Freq),
+                                               vjust=0,size=3.5)+
+  ylab("Frecuencia relativa")+
+  labs(title = "Diagrama de barras de la tabla cruzada de frecuencias relativas")+
+  scale_fill_manual(values=c("green", "purple"))
+```
+
++-----------------------------------+-------------------------------------------------------+-----------+
+| Año en que se realizó la encuesta | Año anterior o previo a la realización de la encuesta |           |
++:=================================:+:=====================================================:+:=========:+
+|                                   | No laboró                                             | Si laboró |
++-----------------------------------+-------------------------------------------------------+-----------+
+| No labora                         | 0.2727                                                | 0.0727    |
++-----------------------------------+-------------------------------------------------------+-----------+
+| Si labora                         | 0.1273                                                | 0.5273    |
++-----------------------------------+-------------------------------------------------------+-----------+
+
+Como se puede observar en las tablas y gráficos anteriores:
+
+-   **El 52.7% de las mujeres de raza blanca que participaron en la encuesta, si laboraron en ambos periodos.**
+
+-   El 27.27% no laboró en ninguno de los dos periodos.
+
+-   El 12.73% si laboró en el año en que se realizó la encuesta pero no en el año anterior.
+
+-   El 7.27% no laboró en el año en que se realizó la encuesta pero si en el año anterior.
+
+------------------------------------------------------------------------
+
+## 7. ¿Qué podemos decir acerca de las características de las mujeres que trabajan?
+
+Con base en los puntos y observaciones descritas anteriormente, de manera general, se puede decir que:
+
+1.  En la población de mujeres se ha presentado movilidad positiva de la situación laboral, es mayor el porcentaje de mujeres que pasaron de no laborar a laborar (12.5%), que de laborar a no laborar (7.5%).
+
+2.  El 55% de las mujeres se ha mantenido en su estatus de laborar, mientras que el 25% se han mantenido en su estatus de no laborar.
+
+3.  La edad promedio de las mujeres que laboran es de 36 años de edad, mientras que la edad promedio de las mujeres que no laboran es de aproximadamente 33 años, por lo que es una población de mujeres con buenas características de emplearse.
+
+4.  El 67.5% de las mujeres, independientemente de su nivel de estudio, si labora; mientras que el 32.5% de mujeres, independientemente de su grado de estudio no labora. La mayoría de las mujeres (76.5%) cuenta con un nivel de estudios de 12 años, y especificamente un 49% de estas mujeres labora y el 27.5% no.
+
+5.  El 3% de las mujeres tienen un nivel de estudios de 18 años y todas laboran.
+
+6.  La mayoría de las mujeres que laboran son las que no cuentan con hijos de entre 0 y 6 años de edad (50.5%), mientras que las mujeres que no laboran, solo el 13.5% no tiene hijos entre 0 y 6 años, y solo el 5% de las mujeres, independientemente de si laboran o no, solo tiene hijos menores de 2 años de edad.
+
+7.  De las mujeres que participaron en la encuesta, solo el 11.5% es de raza negra y laboró en ambos periodos, mientras que la proporción de mujeres que son de raza blanca y que laboraron también en ambos periodos es de 43.5%.
+
+8.  El 65.7% de las mujeres de raza negra que participaron en la encuesta, si laboraron en ambos periodos; mientras que el 52.7% de las mujeres de raza blanca que participaron en la encuesta, también laboraron en ambos periodos.
