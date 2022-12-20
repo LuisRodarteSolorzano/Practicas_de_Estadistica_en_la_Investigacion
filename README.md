@@ -30,16 +30,13 @@ dos años (1=si, 0=no).
 2 y 6 años (1=sí, 0=no).
 ----------------------------------------------------------------------------------
 Resuelva:
-- ¿Qué proporción de mujeres no trabajaron ni al momento de la encuesta, ni el año 
-- anterior a la encuesta?
-- ¿Cómo se comportan los salarios del esposo, para mujeres que trabajan y para las que 
-- no trabajan?
+- ¿Qué proporción de mujeres no trabajaron ni al momento de la encuesta, ni el año anterior a la encuesta?
+- ¿Cómo se comportan los salarios del esposo, para mujeres que trabajan y para las que no trabajan?
 - ¿Qué podemos decir de la edad de las mujeres incluidas en la muestra?
-- ¿Qué sucede con la proporción de las mujeres no trabajadoras, de acuerdo al nivel 
-- educativo?
+- ¿Qué sucede con la proporción de las mujeres no trabajadoras, de acuerdo al nivel educativo?
 - ¿Hay más mujeres trabajadoras con niños menores de dos años o mayores?
-- ¿Qué proporción de mujeres negras trabajaron durante los dos años referidos en la 
-- muestra? Y ¿qué proporción de mujeres no negras trabajaron durante el mismo período?
+- ¿Qué proporción de mujeres negras trabajaron durante los dos años referidos en la muestra? 
+  Y ¿qué proporción de mujeres no negras trabajaron durante el mismo período?
 - ¿Qué podemos decir acerca de las características de las mujeres que trabajan?
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
