@@ -2,7 +2,7 @@
 
 ## Descripción de Base de Datos
 Para la realización de esta actividad, es necesario consultar la Base de Datos 
-Práctica_Mujeres_Trabajadoras.xlsx a la cual puede acceder desde el aula virtual 
+**Práctica_Mujeres_Trabajadoras.xlsx** a la cual puede acceder desde el aula virtual 
 del curso. Se proporciona un script de R, denominado practica_mujeres_trabajadoras 
 y puede apoyarse en el video tutorial Práctica Mujeres Trabajadoras, el cual 
 ilustra el desarrollo de esta práctica.
@@ -45,7 +45,7 @@ Resuelva:
 # Práctica Rendimiento Automotriz
 
 ## Descripción de Base de Datos
-Para la realización de esta actividad, es necesario consultar la Base de Datos Rendimiento.xlsx a la 
+Para la realización de esta actividad, es necesario consultar la Base de Datos **Rendimiento.xlsx** a la 
 cual puede acceder desde el aula virtual del curso. Puede apoyarse en el video tutorial Práctica 
 Rendimiento Automotriz, el cual ilustra el desarrollo de esta práctica.
 
