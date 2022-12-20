@@ -9,6 +9,7 @@ ilustra el desarrollo de esta práctica.
 
 FUENTE: Jobson, J.D., (1992) Applied Multivariate Data Analysis Volume II: Categorical 
 and Multivariate Methods. Springer-Verlang.
+
 DESCRIPCION: Este conjunto de datos se obtuvo de la Sección de Estudios de Ingresos 
 Dinámicos de la Universidad de Michigan. El propósito de los datos en esta aplicación 
 es estudiar los factores que influyen en las mujeres casadas a participar en la fuerza 
@@ -29,10 +30,18 @@ dos años (1=si, 0=no).
 2 y 6 años (1=sí, 0=no).
 ----------------------------------------------------------------------------------
 Resuelva:
-• ¿Qué proporción de mujeres no trabajaron ni al momento de la encuesta, ni el año anterior a la encuesta?
-• ¿Cómo se comportan los salarios del esposo, para mujeres que trabajan y para las que no trabajan?
-• ¿Qué podemos decir de la edad de las mujeres incluidas en la muestra?
-• ¿Qué sucede con la proporción de las mujeres no trabajadoras, de acuerdo al nivel educativo?
-• ¿Hay más mujeres trabajadoras con niños menores de dos años o mayores?
-• ¿Qué proporción de mujeres negras trabajaron durante los dos años referidos en la muestra? Y ¿qué proporción de mujeres no negras trabajaron durante el mismo período?
-• ¿Qué podemos decir acerca de las características de las mujeres que trabajan?
+- ¿Qué proporción de mujeres no trabajaron ni al momento de la encuesta, ni el año 
+- anterior a la encuesta?
+- ¿Cómo se comportan los salarios del esposo, para mujeres que trabajan y para las que 
+- no trabajan?
+- ¿Qué podemos decir de la edad de las mujeres incluidas en la muestra?
+- ¿Qué sucede con la proporción de las mujeres no trabajadoras, de acuerdo al nivel 
+- educativo?
+- ¿Hay más mujeres trabajadoras con niños menores de dos años o mayores?
+- ¿Qué proporción de mujeres negras trabajaron durante los dos años referidos en la 
+- muestra? Y ¿qué proporción de mujeres no negras trabajaron durante el mismo período?
+- ¿Qué podemos decir acerca de las características de las mujeres que trabajan?
+----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
+
